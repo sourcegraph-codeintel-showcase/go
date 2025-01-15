@@ -1,0 +1,15 @@
+name: Index and upload SCIP data to sourcegraph.com
+on:
+  push:
+    branches:
+      - master
+jobs:
+  index-and-upload:
+    runs-on: ubuntu-latest
+    container:  sourcegraph/scip-go:latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Generate SCIP data
+        run: scip-go --moduleRoot src
+      - name: Upload SCIP data to sourcegraph.com
+        run: src code-intel upload -github-token=${{ secrets.GITHUB_TOKEN }} -ignore-upload-failure
